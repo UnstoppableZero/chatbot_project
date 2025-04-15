@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chatbot</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        #chat-box {
+            border: 1px solid #ccc;
+            padding: 10px;
+            height: 300px;
+            overflow-y: scroll;
+            background-color: #f9f9f9;
+        }
+        .user { color: blue; margin: 5px 0; }
+        .bot { color: green; margin: 5px 0; }
+        form { margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Simple Chatbot</h1>
+    <div id="chat-box"></div>
+
+    <form id="chat-form">
+        <input type="text" id="message" placeholder="Type a message..." required />
+        <button type="submit">Send</button>
+    </form>
+
+    <script>
+        // When the form is submitted:
+        $("#chat-form").submit(function(e) {
+            e.preventDefault();  // Prevent page reload
+
+            let userMessage = $("#message").val();  // Get user's input
+            $("#chat-box").append("<div class='user'><b>You:</b> " + userMessage + "</div>");
+
+            $.post("/chat", { message: userMessage }, function(data) {
+                $("#chat-box").append("<div class='bot'><b>Bot:</b> " + data.response + "</div>");
+                $("#chat-box").scrollTop($("#chat-box")[0].scrollHeight);  // Auto-scroll
+                $("#message").val("");  // Clear input
+            });
+        });
+    </script>
+</body>
+</html>
